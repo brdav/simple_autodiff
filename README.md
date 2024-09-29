@@ -10,7 +10,7 @@ This repo implements a minimal example of neural network backpropagation (specif
 
 <img src="./nn_vis.png" width="900"/>
 
-[image source: Prince, S.J., "Understanding Deep Learning"] 
+[[image source]](https://udlbook.github.io/udlbook/) 
 
 To run the code, install in a Python >= 3.9 environment with
 ```
@@ -19,9 +19,7 @@ pip install -e .
 
 To run the notebook, the following packages are additionally required:
 ```
-pip install notebook
-pip install scikit-learn
-pip install matplotlib
+pip install notebook scikit-learn matplotlib
 ```
 
 Testing requires `pytest` and `torch`, and can be executed with
@@ -37,6 +35,4 @@ python -m pytest
 
 [1] Bishop, C.M., Bishop, H., "Deep learning: Foundations and concepts", Springer Nature, 2023
 
-[2] Prince, S.J., "Understanding deep learning", MIT press, 2023
-
-[3] Goodfellow, I. et al., "Deep learning", MIT press, 2016
+[2] Goodfellow, I. et al., "Deep learning", MIT press, 2016
