@@ -44,13 +44,14 @@ def test_more_ops():
     g = f / 2.0
     g += 4.0 / f
     g = g / 50
-    g = g.sigmoid_cross_entropy(np.ones_like(g.data))
+    g = g @ np.array([[0.8, 0.1, 0.3], [0.99, 0.0001, 0.45]])
+    g = g.softmax_cross_entropy(np.array([2], dtype=int))
     g = g.sum()
     g.backward()
     amg, bmg, gmg = a, b, g
 
-    a = torch.Tensor([-4.0, -2.0])
-    b = torch.Tensor([2.0, 2.5])
+    a = torch.tensor([-4.0, -2.0])
+    b = torch.tensor([2.0, 2.5])
     a.requires_grad = True
     b.requires_grad = True
     c = a + b
@@ -64,8 +65,9 @@ def test_more_ops():
     g = f / 2.0
     g = g + 4.0 / f
     g = g / 50
-    g = torch.nn.functional.binary_cross_entropy_with_logits(
-        g, torch.ones_like(g), reduction="none"
+    g = g @ torch.tensor([[0.8, 0.1, 0.3], [0.99, 0.0001, 0.45]])
+    g = torch.nn.functional.cross_entropy(
+        g.unsqueeze(0), torch.tensor([2], dtype=int), reduction="none"
     )
     g = g.sum()
     g.backward()

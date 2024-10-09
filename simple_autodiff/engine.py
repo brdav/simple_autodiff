@@ -1,10 +1,6 @@
 import numpy as np
 
 
-def sigmoid(a):
-    return np.where(a > 0, 1 / (1 + np.exp(-a)), np.exp(a) / (np.exp(a) + 1))
-
-
 class Tensor:
 
     def __init__(self, data, _children=()):
@@ -98,15 +94,19 @@ class Tensor:
         out._backward = _backward
         return out
 
-    def sigmoid_cross_entropy(self, y):
-        y = np.reshape(y, self.data.shape)
+    def softmax_cross_entropy(self, y):
+        y = np.eye(self.data.shape[1])[y]
+
+        def _softmax(x):
+            tmp = np.exp(x - np.amax(x, axis=1, keepdims=True))
+            return tmp / tmp.sum(axis=1, keepdims=True)
+
         out = Tensor(
-            self.data * (1 - y) - np.log(sigmoid(self.data)),
-            (self,),
+            np.sum(-np.log(_softmax(self.data)) * y, axis=1, keepdims=True), (self,)
         )
 
         def _backward():
-            self.grad += (sigmoid(self.data) - y) * out.grad
+            self.grad += (_softmax(self.data) - y) * out.grad
 
         out._backward = _backward
         return out
@@ -116,14 +116,14 @@ class Tensor:
         topo = []
         visited = set()
 
-        def build_topo(v):
+        def _build_topo(v):
             if v not in visited:
                 visited.add(v)
                 for child in v._prev:
-                    build_topo(child)
+                    _build_topo(child)
                 topo.append(v)
 
-        build_topo(self)
+        _build_topo(self)
 
         # go one variable at a time and apply the chain rule to get its gradient
         self.grad = np.ones_like(self.data)

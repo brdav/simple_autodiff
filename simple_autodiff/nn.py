@@ -16,7 +16,7 @@ class Module:
 class Layer(Module):
 
     def __init__(self, nin, nout, nonlin=True):
-        self.W = Tensor(np.random.randn(nin, nout))
+        self.W = Tensor(np.random.randn(nin, nout) * np.sqrt(2 / nin))
         self.b = Tensor(np.zeros(nout))
         self.nonlin = nonlin
 
